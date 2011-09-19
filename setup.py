@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name              = "dynaptico-pamfax",
-    version           = "0.0.4",
+    version           = "0.0.5",
     url               = "http://github.com/dynaptico/pamfaxp",
     maintainer        = "Dynaptico LLC (http://www.dynaptico.com)",
     maintainer_email  = "support@dynaptico.com",
@@ -12,7 +12,7 @@ setup(
     long_description  = "This module implements a set of classes and methods for sending and receiving faxes via the PamFax API using the Python programming language",
     platforms         = ["Platform Independent"],
     license           = "MIT",
-    packages          = ['pamfax'],
+    packages          = ['pamfax', 'pamfax.processors'],
     classifiers       = [
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

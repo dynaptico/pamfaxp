@@ -2,3 +2,4 @@ v0.0.1, 09/19/2011 -- Initial release.
 
 v0.0.2, 09/19/2011 -- Added init file.
 
+v0.0.3, 09/19/2011 -- Updated module info.

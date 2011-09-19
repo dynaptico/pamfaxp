@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name              = "pamfax",
-    version           = "0.0.2",
+    version           = "0.0.3",
     url               = "http://github.com/dynaptico/pamfaxp",
     maintainer        = "Dynaptico LLC (http://www.dynaptico.com)",
     maintainer_email  = "support@dynaptico.com",
@@ -19,5 +19,5 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python"
     ],
-    py_modules = ['pamfax'],
+    py_modules = ['pamfax', 'multipart'],
 )

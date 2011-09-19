@@ -1,0 +1,32 @@
+NAME
+
+    pamfaxp - A Python module that implements the PamFax API. 
+
+    For more information about the PamFax API that is used with this module, 
+    please see:
+
+        http://www.pamfax.biz/en/extensions/developers/
+
+    As this python module is still in development, please report any bugs or 
+    issues by raising an issue here:
+
+        http://github.com/dynaptico/pamfaxp/issues
+
+NOTE ON PYTHON VERSIONS
+
+    This module is for python 2.x and has only been tested against python 2.7.  
+
+TESTS
+
+    Run testsuite by issuing:
+
+    cd test
+    python test.py
+
+THANKS TO
+
+    Jason Goecke and team at Tropo for writing tropo-webapi-python and
+    pamfaxr, both of which this module is heavily based on.
+
+        http://github.com/tropo/pamfaxr
+        http://github.com/tropo/tropo-webapi-python

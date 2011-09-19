@@ -12,6 +12,8 @@ PASSWORD = 'password'
 API_KEY = 'apikey'
 API_SECRET = 'apisecret'
 
+# Make sure to add some credit to your sandbox account before running this test.
+
 class TestPamFax(unittest.TestCase):
     """A set of unit tests for this implementation of the PamFax API."""
     
@@ -21,7 +23,7 @@ class TestPamFax(unittest.TestCase):
         # Create a faxjob
         print '*'*10
         print 'Creating a fax job'
-        response = pamfax.create_fax_job()
+        response = pamfax.create()
         print response
         assert response['result']['code'] == 'success'
         faxjob = response
@@ -120,16 +122,16 @@ class TestPamFax(unittest.TestCase):
         # Send the fax
         print '*'*10
         print 'Send the fax'
-        response = pamfax.send_fax()
-        print response
-        assert response['result']['code'] == 'not_enough_credit'
-        
-        # Send fax later
-        print '*'*10
-        print 'Sent the fax later'
-        response = pamfax.send_fax_later()
+        response = pamfax.send()
         print response
         assert response['result']['code'] == 'success'
+        
+        # Send fax later - only if you don't have enough credit now
+        #print '*'*10
+        #print 'Send the fax later'
+        #response = pamfax.send_later()
+        #print response
+        #assert response['result']['code'] == 'success'
         
         # Clone the fax
         print '*'*10

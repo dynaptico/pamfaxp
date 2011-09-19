@@ -75,7 +75,7 @@ class FaxJob:
     #         "state": "editing"
     #     }
     # }
-    def create_fax_job(self):
+    def create(self):
         """Creates a new fax job and returns a dict based on the HTTP response in JSON."""
         url = '%s/Create%s&%s' % (self.base_url, self.api_credentials, urlencode({'user_ip': IP_ADDR, 'user_agent': 'pamfax.py', 'origin': 'script'}))
         return self._get(url)
@@ -376,16 +376,16 @@ class FaxJob:
     #     }
     # }
     def get_state(self, blocking=False, interval=1):
-        """Obtains the state of the FaxJob build, may block or return immediately"""
+        """Obtains the state of the FaxJob build, may block until a stateis received, or just return immediately"""
         if blocking:
             state = None
             result = None
             while state is None:
-                result = self.fetch_state()
+                result = self.get_fax_state()
                 time.sleep(interval)
             return result
         else:
-            return self.fetch_state()
+            return self.get_fax_state()
     
     # {
     #     "Status": {
@@ -473,7 +473,7 @@ class FaxJob:
     #         "message": "You don't have enough PamFax Credit. <a href=\\\"https://www.pamfax.biz/shop\\\">Buy PamFax Credit now</a>."
     #     }
     # }
-    def send_fax(self):
+    def send(self):
         """Request to send the built fax and returns a dict based on the HTTP response in JSON."""
         url = "%s/Send%s" % (self.base_url, self.api_credentials)
         return self._get(url)
@@ -485,13 +485,13 @@ class FaxJob:
     #         "message": ""
     #     }
     # }
-    def send_fax_later(self):
+    def send_later(self):
         """Request to send the built fax later and returns a dict based on the HTTP response in JSON."""
         url = "%s/SendLater%s" % (self.base_url, self.api_credentials)
         return self._get(url)
     
-    def fetch_state(self):
-        """Fetches the state of the fax job."""
+    def get_fax_state(self):
+        """Gets the state of the fax job."""
         url = "%s/GetFaxState%s" % (self.base_url, self.api_credentials)
         self.http.request('GET', url)
         response = self.http.getresponse()

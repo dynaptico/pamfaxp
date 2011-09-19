@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(
-    name              = "pamfax",
+    name              = "dynaptico-pamfax",
     version           = "0.0.3",
     url               = "http://github.com/dynaptico/pamfaxp",
     maintainer        = "Dynaptico LLC (http://www.dynaptico.com)",

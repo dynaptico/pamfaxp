@@ -134,11 +134,11 @@ class TestPamFax(unittest.TestCase):
         #assert response['result']['code'] == 'success'
         
         # Clone the fax
-        print '*'*10
-        print 'Cloning the fax'
-        response = pamfax.clone_fax(faxjob['FaxContainer']['uuid'])
-        print response
-        assert response['result']['code'] == 'success'
+        #print '*'*10
+        #print 'Cloning the fax'
+        #response = pamfax.clone_fax(faxjob['FaxContainer']['uuid'])
+        #print response
+        #assert response['result']['code'] == 'success'
         
 if __name__ == '__main__':
     unittest.main()

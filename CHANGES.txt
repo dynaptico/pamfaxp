@@ -4,4 +4,8 @@ v0.0.2, 09/19/2011 -- Added init file.
 
 v0.0.3, 09/19/2011 -- Updated module info.
 
-v0.0.4, 09/19/2011 -- Moved processors to a separate package, and added the Session processors
+v0.0.4, 09/19/2011 -- Moved processors to a separate package, and added the Session processors.
+
+v0.0.5, 09/19/2011 -- Updated setup.py to include processors module.
+
+v0.0.6, 09/20/2011 -- Added remaining processors.

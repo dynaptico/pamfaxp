@@ -12,7 +12,7 @@ NOTE: This module has only been tested with python 2.7.
 from httplib import HTTPSConnection
 from urllib import urlencode
 
-from processors import FaxJob, Session
+from processors import Common, FaxHistory, FaxJob, NumberInfo, OnlineStorage, Session, Shopping, UserInfo
 
 import types
 
@@ -36,9 +36,15 @@ class PamFax:
         session = Session(api_credentials, http)
         user_token = self.get_user_token(session, username, password)
         api_credentials = '%s&%s' % (api_credentials, urlencode({'usertoken': user_token}))
-        faxjob = FaxJob(api_credentials, http)
+        common = Common(api_credentials, http)
+        fax_history = FaxHistory(api_credentials, http)
+        fax_job = FaxJob(api_credentials, http)
+        number_info = NumberInfo(api_credentials, http)
+        online_storage = OnlineStorage(api_credentials, http)
+        shopping = Shopping(api_credentials, http)
+        user_info = UserInfo(api_credentials, http)
         attrs = dir(self)
-        for processor in (session, faxjob):
+        for processor in (session, common, fax_history, fax_job, number_info, online_storage, shopping, user_info):
             for attr_key in dir(processor):
                 if attr_key not in attrs:
                     attr_value = getattr(processor, attr_key)

@@ -27,7 +27,6 @@ from urllib import urlencode
 
 import mimetypes
 import socket
-import time
 
 IP_ADDR = socket.gethostbyname(socket.gethostname())
 USER_AGENT = 'dynaptico-pamfax'
@@ -36,7 +35,7 @@ CONTENT_TYPE = 'content-type'
 CONTENT_TYPE_JSON = 'application/json'
 
 # ----------------------------------------------------------------------------
-# "private" helper mehtods
+# "private" helper methods
 # ----------------------------------------------------------------------------
 
 def _get_url(base_url, action, api_credentials, **kwargs):
@@ -48,8 +47,13 @@ def _get_url(base_url, action, api_credentials, **kwargs):
         return url
     query = {}
     for arg in kwargs:
-        if kwargs[arg] is not None:
-            query[arg] = kwargs[arg]
+        kwarg = kwargs[arg]
+        if kwarg is not None:
+            if isinstance(kwarg, list):
+                for i in range(0, len(kwarg)):
+                    query['%s[%d]' % (arg, i)] = kwarg[i]
+            else:
+                query[arg] = kwarg
     url = '%s&%s' % (url, urlencode(query))
     return url
 
@@ -82,6 +86,32 @@ def _post(http, url, body, headers={}):
     print "posting to url '%s' with body '%s'" % (url, body)
     http.request('POST', url, body, headers)
     return _get_and_check_response(http)
+
+def _encode_multipart_formdata(fields, files):
+    """
+    fields is a sequence of (name, value) elements for regular form fields.
+    files is a sequence of (name, filename, value) elements for data to be uploaded as files
+    Return (content_type, body) ready for httplib.HTTP instance
+    """
+    BOUNDARY = '----------Boundary_of_form_part_$'
+    CRLF = '\r\n'
+    L = []
+    for (key, value) in fields:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"' % key)
+        L.append('')
+        L.append(value)
+    for (key, filename, value) in files:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+        L.append('Content-Type: %s' % mimetypes.guess_type(filename)[0] or 'application/octet-stream')
+        L.append('')
+        L.append(value)
+    L.append('--' + BOUNDARY + '--')
+    L.append('')
+    body = CRLF.join(L)
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    return content_type, body
 
 # ----------------------------------------------------------------------------
 # Common
@@ -368,7 +398,7 @@ class FaxJob:
         See http://www.faqs.org/rfcs/rfc1867.html for documentation on file uploads.
         """
         file = open(filename, 'rb')
-        content_type, body = self._encode_multipart_formdata([('filename', filename)], [('file', filename, filename)])
+        content_type, body = _encode_multipart_formdata([('filename', filename)], [('file', filename, filename)])
         url = _get_url(self.base_url, 'AddFile', self.api_credentials, filename=filename, origin=origin)
         return _post(self.http, url, body, {'Content-Type': content_type, 'Content-Length': str(len(body))})
     
@@ -542,59 +572,6 @@ class FaxJob:
         """
         url = _get_url(self.base_url, 'StartPreviewCreation', self.api_credentials)
         return _get(self.http, url)
-    
-    # ------------------------------------------------------------------------
-    # Special helper methods
-    # ------------------------------------------------------------------------
-    
-    def get_state(self, blocking=False, interval=1):
-        """Obtains the state of the FaxJob build, may block until a state is received, or just return immediately"""
-        if blocking:
-            state = None
-            result = None
-            while state is None:
-                result = self.get_fax_state()
-                time.sleep(interval)
-            return result
-        else:
-            return self.get_fax_state()
-    
-    def is_converting(self, fax_state):
-        """Returns whether or not a file in the fax job is still in a converting state."""
-        converting = False
-        files = fax_state['Files']
-        if 'content' in files:
-            for file in files['content']:
-                state = file['state']
-                if state == '' or state == 'converting':
-                    converting = True
-        return converting
-    
-    def _encode_multipart_formdata(self, fields, files):
-        """
-        fields is a sequence of (name, value) elements for regular form fields.
-        files is a sequence of (name, filename, value) elements for data to be uploaded as files
-        Return (content_type, body) ready for httplib.HTTP instance
-        """
-        BOUNDARY = '----------Boundary_of_form_part_$'
-        CRLF = '\r\n'
-        L = []
-        for (key, value) in fields:
-            L.append('--' + BOUNDARY)
-            L.append('Content-Disposition: form-data; name="%s"' % key)
-            L.append('')
-            L.append(value)
-        for (key, filename, value) in files:
-            L.append('--' + BOUNDARY)
-            L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
-            L.append('Content-Type: %s' % mimetypes.guess_type(filename)[0] or 'application/octet-stream')
-            L.append('')
-            L.append(value)
-        L.append('--' + BOUNDARY + '--')
-        L.append('')
-        body = CRLF.join(L)
-        content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
-        return content_type, body
 
 # ----------------------------------------------------------------------------
 # NumberInfo

@@ -14,6 +14,7 @@ from urllib import urlencode
 
 from processors import Common, FaxHistory, FaxJob, NumberInfo, OnlineStorage, Session, Shopping, UserInfo
 
+import time
 import types
 
 class PamFax:
@@ -58,6 +59,33 @@ class PamFax:
             return result['UserToken']['token']
         else:
             raise Exception(result['result']['message'])
+    
+    # ------------------------------------------------------------------------
+    # Convenient helper methods
+    # ------------------------------------------------------------------------
+    
+    def get_state(self, blocking=False, interval=1):
+        """Obtains the state of the FaxJob build, may block until a state is received, or just return immediately"""
+        if blocking:
+            state = None
+            result = None
+            while state is None:
+                result = self.get_fax_state()
+                time.sleep(interval)
+            return result
+        else:
+            return self.get_fax_state()
+    
+    def is_converting(self, fax_state):
+        """Returns whether or not a file in the fax job is still in a converting state."""
+        converting = False
+        files = fax_state['Files']
+        if 'content' in files:
+            for file in files['content']:
+                state = file['state']
+                if state == '' or state == 'converting':
+                    converting = True
+        return converting
 
 if __name__ == '__main__':
     print """

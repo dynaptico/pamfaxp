@@ -17,3 +17,5 @@ v0.0.8, 09/20/2011 -- Added remaining test cases.
 v0.0.9, 09/21/2011 -- Added remaining test cases.
 
 v1.0.0, 09/21/2011 -- Bumped up major version number
+
+v1.0.1, 09/21/2011 -- Updated documentation per PEP 257

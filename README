@@ -18,10 +18,20 @@ NOTE ON PYTHON VERSIONS
 
 TESTS
 
-    Run testsuite by issuing:
+    Run the test suite with the following commands:
 
     cd test
     python test.py
+
+DOCUMENTATION
+
+    The documentation for this package is available at the following location:
+
+        http://packages.python.org/dynaptico-pamfax
+
+    And was generated with the following command (just so I don't forget):
+
+        epydoc --html -o doc --name dynaptico-pamfax --url https://github.com/dynaptico/pamfaxp -v pamfax pamfax.processors
 
 THANKS TO
 

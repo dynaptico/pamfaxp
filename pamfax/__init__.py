@@ -18,13 +18,13 @@ import time
 import types
 
 class PamFax:
-    """
-    Class encapsulating the PamFax API. Actions related to the sending of faxes are called on objects of this class.
+    """Class encapsulating the PamFax API. Actions related to the sending of faxes are called on objects of this class.
     For example, the 'create' action resides in the FaxJob class, but you can just use the following 'shortcut' logic:
     
     from pamfax import PamFax
     p = PamFax(<args>)
     p.create()
+    
     """
     
     def __init__(self, username, password, host='api.pamfax.biz', apikey='', apisecret=''):

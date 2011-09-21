@@ -671,11 +671,7 @@ class Session:
     """Class encapsulating a PamFax session"""
     
     def __init__(self, api_credentials, http):
-        """
-        Instantiates the Session class.
-        Note that the api_credentials passed into this method do NOT contain the usertoken field.
-        This is different from all other processor classes.
-        """
+        """Instantiates the Session class."""
         self.base_url = '/Session'
         self.api_credentials = api_credentials
         self.http = http
@@ -830,7 +826,7 @@ class UserInfo:
     
     def has_avatar(self):
         """Return if Avatar is available or not"""
-        url = _get_url(self.base_url, 'HasAvator', self.api_credentials)
+        url = _get_url(self.base_url, 'HasAvatar', self.api_credentials)
         return _get(self.http, url)
     
     def has_plan(self):

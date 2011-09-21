@@ -12,7 +12,7 @@ NOTE: This module has only been tested with python 2.7.
 from httplib import HTTPSConnection
 from urllib import urlencode
 
-from processors import Common, FaxHistory, FaxJob, NumberInfo, OnlineStorage, Session, Shopping, UserInfo
+from processors import Common, FaxHistory, FaxJob, NumberInfo, OnlineStorage, Session, Shopping, UserInfo, _get, _get_url
 
 import time
 import types
@@ -27,21 +27,19 @@ class PamFax:
     p.create()
     """
     
-    def __init__(self, username, password, base_uri='api.pamfax.biz', api_key='', api_secret=''):
+    def __init__(self, username, password, host='api.pamfax.biz', apikey='', apisecret=''):
         """Creates an instance of the PamFax class and initiates an HTTPS session."""
-        api_credentials = '?%s' % urlencode({'apikey': api_key, 
-                                             'apisecret': api_secret, 
-                                             'apioutputformat': 'API_FORMAT_JSON'})
-        print "Connecting to %s" % base_uri
-        http = HTTPSConnection(base_uri)
-        session = Session(api_credentials, http)
-        user_token = self.get_user_token(session, username, password)
-        api_credentials = '%s&%s' % (api_credentials, urlencode({'usertoken': user_token}))
+        print "Connecting to %s" % host
+        http = HTTPSConnection(host)
+        api_credentials = '?%s' % urlencode({'apikey': apikey, 'apisecret': apisecret, 'apioutputformat': 'API_FORMAT_JSON'})
+        usertoken = self.get_user_token(http, api_credentials, username, password)
+        api_credentials = '%s&%s' % (api_credentials, urlencode({'usertoken': usertoken}))
         common = Common(api_credentials, http)
         fax_history = FaxHistory(api_credentials, http)
         fax_job = FaxJob(api_credentials, http)
         number_info = NumberInfo(api_credentials, http)
         online_storage = OnlineStorage(api_credentials, http)
+        session = Session(api_credentials, http)
         shopping = Shopping(api_credentials, http)
         user_info = UserInfo(api_credentials, http)
         attrs = dir(self)
@@ -52,9 +50,14 @@ class PamFax:
                     if isinstance(attr_value, types.MethodType):
                         setattr(self, attr_key, attr_value)
     
-    def get_user_token(self, session, username, password):
+    def verify_user(self, http, api_credentials, username, password):
+        """Verifies a user via username/password"""
+        url = _get_url('/Session', 'VerifyUser', api_credentials, username=username, password=password)
+        return _get(http, url)
+    
+    def get_user_token(self, http, api_credentials, username, password):
         """Gets the user token to use with subsequent requests."""
-        result = session.verify_user(username, password)
+        result = self.verify_user(http, api_credentials, username, password)
         if result['result']['code'] == 'success':
             return result['UserToken']['token']
         else:

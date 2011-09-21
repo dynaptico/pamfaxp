@@ -9,3 +9,11 @@ v0.0.4, 09/19/2011 -- Moved processors to a separate package, and added the Sess
 v0.0.5, 09/19/2011 -- Updated setup.py to include processors module.
 
 v0.0.6, 09/20/2011 -- Added remaining processors.
+
+v0.0.7, 09/20/2011 -- Added remaining test cases.
+
+v0.0.8, 09/20/2011 -- Added remaining test cases.
+
+v0.0.9, 09/21/2011 -- Added remaining test cases.
+
+v1.0.0, 09/21/2011 -- Bumped up major version number

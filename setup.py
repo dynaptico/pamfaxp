@@ -4,8 +4,10 @@ from distutils.core import setup
 
 setup(
     name              = "dynaptico-pamfax",
-    version           = "1.0.1",
+    version           = "1.0.2",
     url               = "http://github.com/dynaptico/pamfaxp",
+    author            = "Jonathan Sweemer",
+    author_email      = "sweemer@gmail.com",
     maintainer        = "Dynaptico LLC (http://www.dynaptico.com)",
     maintainer_email  = "support@dynaptico.com",
     description       = "Python implementation of the PamFax API",

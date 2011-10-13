@@ -26,6 +26,7 @@ from httplib import HTTPException
 from urllib import urlencode
 
 import mimetypes
+import os
 import socket
 
 IP_ADDR = socket.gethostbyname(socket.gethostname())
@@ -551,8 +552,9 @@ class FaxJob:
         
         """
         file = open(filename, 'rb')
-        content_type, body = _encode_multipart_formdata([('filename', filename)], [('file', filename, filename)])
-        url = _get_url(self.base_url, 'AddFile', self.api_credentials, filename=filename, origin=origin)
+        basename = os.path.basename(file.name)
+        content_type, body = _encode_multipart_formdata([('filename', basename)], [('file', basename, basename)])
+        url = _get_url(self.base_url, 'AddFile', self.api_credentials, filename=basename, origin=origin)
         return _post(self.http, url, body, {'Content-Type': content_type, 'Content-Length': str(len(body))})
     
     def add_file_from_online_storage(self, provider, uuid):

@@ -541,7 +541,7 @@ class FaxJob:
     def add_file(self, filename, origin=None):
         """Adds a file to the current fax.
         
-        Requires the file to be uploaded as POST paramter named 'file' as a standard HTTP upload. This could be either Content-type: multipart/form-data with file content as base64-encoded data or as Content-type: application/octet-stream with just the binary data.
+        Requires the file to be uploaded as POST parameter named 'file' as a standard HTTP upload. This could be either Content-type: multipart/form-data with file content as base64-encoded data or as Content-type: application/octet-stream with just the binary data.
         See http://www.faqs.org/rfcs/rfc1867.html for documentation on file uploads.
         
         Arguments:
@@ -553,7 +553,7 @@ class FaxJob:
         """
         file = open(filename, 'rb')
         basename = os.path.basename(file.name)
-        content_type, body = _encode_multipart_formdata([('filename', basename)], [('file', basename, basename)])
+        content_type, body = _encode_multipart_formdata([('filename', basename)], [('file', basename, file.read())])
         url = _get_url(self.base_url, 'AddFile', self.api_credentials, filename=basename, origin=origin)
         return _post(self.http, url, body, {'Content-Type': content_type, 'Content-Length': str(len(body))})
     

@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name              = "dynaptico-pamfax",
-    version           = "1.0.3",
+    version           = "1.0.4",
     url               = "http://github.com/dynaptico/pamfaxp",
     author            = "Jonathan Sweemer",
     author_email      = "sweemer@gmail.com",

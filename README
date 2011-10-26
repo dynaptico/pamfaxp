@@ -23,6 +23,20 @@ TESTS
     cd test
     python test.py
 
+LOGGING
+
+    This module uses the built-in Python logging, with the NullHandler added by default. You can override the default logger
+    by adding the following code to your application (taken from http://docs.python.org/howto/logging.html):
+    
+    import logging
+    logger = logging.getLogger('pamfax')
+    logger.setLevel(logging.DEBUG)
+    sh = logging.StreamHandler()
+    sh.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    sh.setFormatter(formatter)
+    logger.addHandler(sh)
+
 DOCUMENTATION
 
     The documentation for this package is available at the following location:

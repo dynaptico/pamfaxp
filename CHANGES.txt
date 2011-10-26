@@ -23,3 +23,5 @@ v1.0.1, 09/21/2011 -- Updated documentation per PEP 257
 v1.0.2, 10/13/2011 -- Small fix for using add_file on a file in a different directory.
 
 v1.0.3, 10/17/2011 -- Another small fix for using add_file on a file in a different directory.
+
+v1.0.4, 10/26/2011 -- Replaced all print statements with logging.

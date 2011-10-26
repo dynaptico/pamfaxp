@@ -14,8 +14,17 @@ from urllib import urlencode
 
 from processors import Common, FaxHistory, FaxJob, NumberInfo, OnlineStorage, Session, Shopping, UserInfo, _get, _get_url
 
+import logging
+import sys
 import time
 import types
+
+logger = logging.getLogger('pamfax')
+try:
+    logger.addHandler(logging.NullHandler())
+except:
+    pass
+logger.setLevel(logging.DEBUG)
 
 class PamFax:
     """Class encapsulating the PamFax API. Actions related to the sending of faxes are called on objects of this class.
@@ -29,7 +38,7 @@ class PamFax:
     
     def __init__(self, username, password, host='api.pamfax.biz', apikey='', apisecret=''):
         """Creates an instance of the PamFax class and initiates an HTTPS session."""
-        print "Connecting to %s" % host
+        logger.info("Connecting to %s", host)
         http = HTTPSConnection(host)
         api_credentials = '?%s' % urlencode({'apikey': apikey, 'apisecret': apisecret, 'apioutputformat': 'API_FORMAT_JSON'})
         usertoken = self.get_user_token(http, api_credentials, username, password)
@@ -84,14 +93,14 @@ class PamFax:
         converting = False
         files = fax_state['Files']
         if 'content' in files:
-            for file in files['content']:
-                state = file['state']
+            for f in files['content']:
+                state = f['state']
                 if state == '' or state == 'converting':
                     converting = True
         return converting
 
 if __name__ == '__main__':
-    print """
+    print >>sys.stderr, """
 
  This is the Python implementation of the PamFax API.
 

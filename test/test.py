@@ -2,6 +2,7 @@
 
 from pamfax import PamFax
 
+import logging
 import socket
 import sys
 import unittest
@@ -27,16 +28,18 @@ Make sure to upload a file through
 before running this test.
 """
 
-def _assert_json(message, response):
-    print message
-    print response
-    assert response['result']['code'] == 'success'
-    print '*'*10
+logger = logging.getLogger('pamfax')
 
-def _assert_file(message, file, content_type):
-    print message
-    print content_type
-    assert file is not None
+def _assert_json(message, response):
+    logger.debug(message)
+    logger.debug(response)
+    assert response['result']['code'] == 'success'
+    logger.debug('*'*10)
+
+def _assert_file(message, f, content_type):
+    logger.debug(message)
+    logger.debug(content_type)
+    assert f is not None
     assert content_type is not None
 
 # Seed our test account with credit and a fax
@@ -51,9 +54,9 @@ response = pamfax.list_inbox_faxes()
 _assert_json(message, response)
 
 files = response['InboxFaxes']['content']
-file = files[0]
-file_uuid = file['file_uuid']
-uuid = file['uuid']
+f = files[0]
+file_uuid = f['file_uuid']
+uuid = f['uuid']
 
 class TestPamFax(unittest.TestCase):
     """A set of unit tests for this implementation of the PamFax API."""
@@ -64,16 +67,16 @@ class TestPamFax(unittest.TestCase):
         _assert_json(message, response)
         
         message = 'Getting file'
-        file, content_type = pamfax.get_file(file_uuid)
-        _assert_file(message, file, content_type)
+        f, content_type = pamfax.get_file(file_uuid)
+        _assert_file(message, f, content_type)
         
         message = 'Getting geo IP information'
         response = pamfax.get_geo_ip_information(IP_ADDR)
         _assert_json(message, response)
         
         message = 'Getting page preview'
-        file, content_type = pamfax.get_page_preview(uuid, 1)
-        _assert_file(message, file, content_type)
+        f, content_type = pamfax.get_page_preview(uuid, 1)
+        _assert_file(message, f, content_type)
         
         message = 'Listing countries'
         response = pamfax.list_countries()
@@ -183,8 +186,8 @@ class TestPamFax(unittest.TestCase):
         out_uuid = response['SentFaxes']['content'][0]['uuid']
         
         message = 'Getting transmission report'
-        file, content_type = pamfax.get_transmission_report(out_uuid)
-        _assert_file(message, file, content_type)
+        f, content_type = pamfax.get_transmission_report(out_uuid)
+        _assert_file(message, f, content_type)
         
         #message = 'Listing trash'
         #response = pamfax.list_trash()
@@ -252,17 +255,17 @@ class TestPamFax(unittest.TestCase):
         _assert_json(message, response)
         
         # Check state
-        print '*'*10
-        print 'Checking state'
+        logger.debug('*'*10)
+        logger.debug('Checking state')
         t = 0
         while True:
             fax_state = pamfax.get_state()
-            print fax_state
+            logger.debug(fax_state)
             if fax_state['FaxContainer']['state'] == 'ready_to_send':
                 break
             time.sleep(2)
             t += 2
-            print "%d seconds elapsed..." % t
+            logger.debug("%d seconds elapsed...", t)
         assert fax_state['FaxContainer']['state'] == 'ready_to_send'
         
         message = 'Preview the fax'
@@ -302,8 +305,8 @@ class TestPamFax(unittest.TestCase):
         _assert_json(message, response)
         
         message = 'Getting provider logo'
-        file, content_type = pamfax.get_provider_logo('DropBoxStorage', 16)
-        _assert_file(message, file, content_type)
+        f, content_type = pamfax.get_provider_logo('DropBoxStorage', 16)
+        _assert_file(message, f, content_type)
         
         message = 'Listing folder contents'
         response = pamfax.list_folder_contents('DropBoxStorage')
@@ -348,8 +351,8 @@ class TestPamFax(unittest.TestCase):
     
     def test_Shopping(self):
         #message = 'Getting invoice'
-        #file, content_type = pamfax.get_invoice('')
-        #_assert_file(message, file, content_type)
+        #f, content_type = pamfax.get_invoice('')
+        #_assert_file(message, f, content_type)
         
         message = 'Getting nearest fax in number'
         response = pamfax.get_nearest_fax_in_number(IP_ADDR)
@@ -440,13 +443,13 @@ class TestPamFax(unittest.TestCase):
         #response = pamfax.set_online_storage_settings('DropBoxStorage', ['inbox_enabled=1', 'inbox_path=/'])
         #_assert_json(message, response)
         
-        message = 'Setting password'
-        response = pamfax.set_password('temppw', hashFunction='plain')
-        _assert_json(message, response)
+        #message = 'Setting password'
+        #response = pamfax.set_password('temppw', hashFunction='plain')
+        #_assert_json(message, response)
         
-        message = 'Setting password'
-        response = pamfax.set_password(PASSWORD, hashFunction='plain')
-        _assert_json(message, response)
+        #message = 'Setting password'
+        #response = pamfax.set_password(PASSWORD, hashFunction='plain')
+        #_assert_json(message, response)
         
         #message = 'Setting profile properties'
         #response = pamfax.set_profile_properties()

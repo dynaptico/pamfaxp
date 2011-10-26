@@ -25,6 +25,7 @@ except ImportError:
 from httplib import HTTPException
 from urllib import urlencode
 
+import logging
 import mimetypes
 import os
 import socket
@@ -34,6 +35,8 @@ USER_AGENT = 'dynaptico-pamfax'
 ORIGIN = 'script'
 CONTENT_TYPE = 'content-type'
 CONTENT_TYPE_JSON = 'application/json'
+
+logger = logging.getLogger('pamfax')
 
 # ----------------------------------------------------------------------------
 # "private" helper methods
@@ -76,7 +79,7 @@ def _get_and_check_response(http):
     """
     response = http.getresponse()
     codes = (response.status, response.reason)
-    print codes
+    logger.debug(codes)
     if response.status != 200:
         raise HTTPException("Response from server not OK: %s %s" % codes)
     content_type = response.getheader(CONTENT_TYPE, None)
@@ -87,13 +90,13 @@ def _get_and_check_response(http):
 
 def _get(http, url, body=''):
     """Gets the specified url and returns the response."""
-    print "getting url '%s' with body '%s'" % (url, body)
+    logger.info("getting url '%s' with body '%s'", url, body)
     http.request('GET', url, body)
     return _get_and_check_response(http)
 
 def _post(http, url, body, headers={}):
     """Posts to the specified url and returns the response."""
-    print "posting to url '%s' with body '%s'" % (url, body)
+    logger.info("posting to url '%s' with body '%s'", url, body)
     http.request('POST', url, body, headers)
     return _get_and_check_response(http)
 

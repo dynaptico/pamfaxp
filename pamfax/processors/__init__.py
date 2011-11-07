@@ -79,14 +79,15 @@ def _get_and_check_response(http):
     """
     response = http.getresponse()
     codes = (response.status, response.reason)
-    logger.debug(codes)
+    content = response.read()
+    logger.debug('%s\n%s', codes, content)
     if response.status != 200:
         raise HTTPException("Response from server not OK: %s %s" % codes)
     content_type = response.getheader(CONTENT_TYPE, None)
     if content_type is not None and content_type.startswith(CONTENT_TYPE_JSON):
-        return jsonlib.loads(response.read())
+        return jsonlib.loads(content)
     else:
-        return (response.read(), content_type)
+        return (content, content_type)
 
 def _get(http, url, body=''):
     """Gets the specified url and returns the response."""

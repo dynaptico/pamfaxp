@@ -41,7 +41,7 @@ class PamFax:
         logger.info("Connecting to %s", host)
         http = HTTPSConnection(host)
         api_credentials = '?%s' % urlencode({'apikey': apikey, 'apisecret': apisecret, 'apioutputformat': 'API_FORMAT_JSON'})
-        usertoken = self.get_user_token(http, api_credentials, username, password)
+        usertoken = self._get_user_token(http, api_credentials, username, password)
         api_credentials = '%s&%s' % (api_credentials, urlencode({'usertoken': usertoken}))
         common = Common(api_credentials, http)
         fax_history = FaxHistory(api_credentials, http)
@@ -59,14 +59,14 @@ class PamFax:
                     if isinstance(attr_value, types.MethodType):
                         setattr(self, attr_key, attr_value)
     
-    def verify_user(self, http, api_credentials, username, password):
+    def _verify_user(self, http, api_credentials, username, password):
         """Verifies a user via username/password"""
         url = _get_url('/Session', 'VerifyUser', api_credentials, username=username, password=password)
         return _get(http, url)
     
-    def get_user_token(self, http, api_credentials, username, password):
+    def _get_user_token(self, http, api_credentials, username, password):
         """Gets the user token to use with subsequent requests."""
-        result = self.verify_user(http, api_credentials, username, password)
+        result = self._verify_user(http, api_credentials, username, password)
         if result['result']['code'] == 'success':
             return result['UserToken']['token']
         else:

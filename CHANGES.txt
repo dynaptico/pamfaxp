@@ -25,3 +25,5 @@ v1.0.2, 10/13/2011 -- Small fix for using add_file on a file in a different dire
 v1.0.3, 10/17/2011 -- Another small fix for using add_file on a file in a different directory.
 
 v1.0.4, 10/26/2011 -- Replaced all print statements with logging.
+
+v1.0.5, 11/07/2011 -- Small update to logging, and expose the correct verify_user.

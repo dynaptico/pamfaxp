@@ -16,6 +16,11 @@ NOTE ON PYTHON VERSIONS
 
     This module is for python 2.x and has only been tested against python 2.7.  
 
+INSTALLATION
+
+    The module is available from packages.python.org and can be installed using 
+	pip dynaptico-pamfax
+
 TESTS
 
     Run the test suite with the following commands:

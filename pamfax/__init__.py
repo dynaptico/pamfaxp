@@ -39,7 +39,7 @@ class PamFax:
     def __init__(self, username, password, host='api.pamfax.biz', apikey='', apisecret=''):
         """Creates an instance of the PamFax class and initiates an HTTPS session."""
         logger.info("Connecting to %s", host)
-        http = HTTPSConnection(host)
+        http = HTTPSConnection(host, None, None, None, None, 142)
         api_credentials = '?%s' % urlencode({'apikey': apikey, 'apisecret': apisecret, 'apioutputformat': 'API_FORMAT_JSON'})
         usertoken = self._get_user_token(http, api_credentials, username, password)
         api_credentials = '%s&%s' % (api_credentials, urlencode({'usertoken': usertoken}))
